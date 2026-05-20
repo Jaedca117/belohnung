@@ -18,12 +18,12 @@ $children = [
     [
         'id'    => 'sophie',
         'name'  => 'Sophie',
-        'photo' => 'kind1.jpg',
+        'photo' => 'sophie.png',
     ],
     [
         'id'    => 'max',
         'name'  => 'Maximilian',
-        'photo' => 'kind2.jpg',
+        'photo' => 'max.png',
     ],
 ];
 
