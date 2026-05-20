@@ -396,7 +396,9 @@ function e(string $value): string
             }
 
             .child-panel {
-                padding: 48px 10px 8px;
+                justify-content: flex-start;
+                overflow-y: auto;
+                padding: 44px 10px max(10px, env(safe-area-inset-bottom));
             }
 
             .child-panel + .child-panel {
