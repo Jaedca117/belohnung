@@ -94,6 +94,7 @@ function e(string $value): string
         }
 
         .topbar-actions {
+            transition: opacity 180ms ease;
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-end;
@@ -292,7 +293,26 @@ function e(string $value): string
             80% { transform: translateX(7px); }
         }
 
+        .topbar.is-collapsed h1,
+        .topbar.is-collapsed .topbar-actions {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .ui-toggle-button {
+            position: fixed;
+            top: 12px;
+            right: 16px;
+            z-index: 20;
+        }
+
         @media (max-width: 760px) {
+            .ui-toggle-button {
+                top: 8px;
+                right: 10px;
+            }
+
             .topbar {
                 align-items: flex-start;
                 gap: 8px;
@@ -432,7 +452,9 @@ function e(string $value): string
     </style>
 </head>
 <body>
-    <header class="topbar">
+    <button type="button" id="uiToggleButton" class="ui-toggle-button" aria-pressed="false">Bedienelemente ausblenden</button>
+
+    <header class="topbar" id="topbar">
         <h1>Belohnungsbarometer</h1>
         <div class="topbar-actions">
             <button type="button" id="viewToggleButton">Ansicht: Beide</button>
@@ -537,6 +559,10 @@ function e(string $value): string
             return 'reward-barometer-view';
         }
 
+        function uiStorageKey() {
+            return 'reward-barometer-ui-hidden';
+        }
+
         function getSavedView() {
             const savedView = localStorage.getItem(viewStorageKey()) || 'all';
             const validViews = ['all', ...children.map(child => child.id)];
@@ -629,6 +655,24 @@ function e(string $value): string
             return child ? `Ansicht: ${child.name}` : 'Ansicht: Beide';
         }
 
+        function isUiHidden() {
+            return localStorage.getItem(uiStorageKey()) === "1";
+        }
+
+        function setUiHidden(hidden) {
+            localStorage.setItem(uiStorageKey(), hidden ? "1" : "0");
+            applyUiVisibility(hidden, true);
+        }
+
+        function applyUiVisibility(hidden, withSound = true) {
+            const topbar = document.getElementById("topbar");
+            const uiToggleButton = document.getElementById("uiToggleButton");
+            topbar.classList.toggle("is-collapsed", hidden);
+            uiToggleButton.textContent = hidden ? "Bedienelemente einblenden" : "Bedienelemente ausblenden";
+            uiToggleButton.setAttribute("aria-pressed", hidden ? "true" : "false");
+            if (withSound) playTone(640, 0.08, "triangle", 0.04);
+        }
+
         function applyView(activeView) {
             const app = document.querySelector('.app');
             const panels = document.querySelectorAll('.child-panel');
@@ -682,6 +726,9 @@ function e(string $value): string
 
         document.getElementById('resetAllButton').addEventListener('click', resetAll);
         document.getElementById('viewToggleButton').addEventListener('click', cycleView);
+        document.getElementById('uiToggleButton').addEventListener('click', () => {
+            setUiHidden(!isUiHidden());
+        });
 
         document.getElementById('fullscreenButton').addEventListener('click', async () => {
             try {
@@ -697,6 +744,7 @@ function e(string $value): string
 
         children.forEach(child => renderChild(child.id));
         applyView(getSavedView());
+        applyUiVisibility(isUiHidden(), false);
     </script>
 </body>
 </html>
