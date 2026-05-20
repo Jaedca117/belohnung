@@ -301,18 +301,18 @@ function e(string $value): string
         }
 
         .ui-toggle-button {
-            position: fixed;
-            top: 12px;
-            right: 16px;
-            z-index: 20;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            padding: 0;
+            font-size: 1.15rem;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         @media (max-width: 760px) {
-            .ui-toggle-button {
-                top: 8px;
-                right: 10px;
-            }
-
             .topbar {
                 align-items: flex-start;
                 gap: 8px;
@@ -452,11 +452,10 @@ function e(string $value): string
     </style>
 </head>
 <body>
-    <button type="button" id="uiToggleButton" class="ui-toggle-button" aria-pressed="false">Bedienelemente ausblenden</button>
-
     <header class="topbar" id="topbar">
         <h1>Belohnungsbarometer</h1>
         <div class="topbar-actions">
+            <button type="button" id="uiToggleButton" class="ui-toggle-button" aria-pressed="false" aria-label="Bedienelemente ausblenden" title="Bedienelemente ausblenden">👁️</button>
             <button type="button" id="viewToggleButton">Ansicht: Beide</button>
             <button type="button" id="fullscreenButton">Vollbild</button>
             <button type="button" id="resetAllButton">Alle zurücksetzen</button>
@@ -668,7 +667,10 @@ function e(string $value): string
             const topbar = document.getElementById("topbar");
             const uiToggleButton = document.getElementById("uiToggleButton");
             topbar.classList.toggle("is-collapsed", hidden);
-            uiToggleButton.textContent = hidden ? "Bedienelemente einblenden" : "Bedienelemente ausblenden";
+            const label = hidden ? "Bedienelemente einblenden" : "Bedienelemente ausblenden";
+            uiToggleButton.textContent = hidden ? "🙈" : "👁️";
+            uiToggleButton.setAttribute("aria-label", label);
+            uiToggleButton.setAttribute("title", label);
             uiToggleButton.setAttribute("aria-pressed", hidden ? "true" : "false");
             if (withSound) playTone(640, 0.08, "triangle", 0.04);
         }
