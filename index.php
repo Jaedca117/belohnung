@@ -95,6 +95,8 @@ function e(string $value): string
 
         .topbar-actions {
             display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
             gap: 8px;
             pointer-events: auto;
         }
@@ -125,6 +127,10 @@ function e(string $value): string
             height: 100%;
         }
 
+        .app[data-layout="single"] {
+            grid-template-columns: 1fr;
+        }
+
         .child-panel {
             position: relative;
             display: flex;
@@ -145,6 +151,10 @@ function e(string $value): string
 
         .child-panel + .child-panel {
             border-left: 4px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .child-panel.is-hidden {
+            display: none;
         }
 
         .child-panel::before {
@@ -283,6 +293,20 @@ function e(string $value): string
         }
 
         @media (max-width: 760px) {
+            .topbar {
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .topbar h1 {
+                font-size: 1rem;
+            }
+
+            button {
+                padding: 10px 12px;
+                font-size: 0.88rem;
+            }
+
             .app {
                 grid-template-columns: 1fr;
                 grid-template-rows: 1fr 1fr;
@@ -317,6 +341,10 @@ function e(string $value): string
             .hint {
                 display: none;
             }
+
+            .progress {
+                width: 86%;
+            }
         }
     </style>
 </head>
@@ -324,6 +352,7 @@ function e(string $value): string
     <header class="topbar">
         <h1>Belohnungsbarometer</h1>
         <div class="topbar-actions">
+            <button type="button" id="viewToggleButton">Ansicht: Beide</button>
             <button type="button" id="fullscreenButton">Vollbild</button>
             <button type="button" id="resetAllButton">Alle zurücksetzen</button>
         </div>
@@ -421,6 +450,20 @@ function e(string $value): string
             return `reward-barometer-rotated-${childId}`;
         }
 
+        function viewStorageKey() {
+            return 'reward-barometer-view';
+        }
+
+        function getSavedView() {
+            const savedView = localStorage.getItem(viewStorageKey()) || 'all';
+            const validViews = ['all', ...children.map(child => child.id)];
+            return validViews.includes(savedView) ? savedView : 'all';
+        }
+
+        function saveView(view) {
+            localStorage.setItem(viewStorageKey(), view);
+        }
+
         function isRotated(childId) {
             return localStorage.getItem(rotateStorageKey(childId)) === "1";
         }
@@ -497,6 +540,37 @@ function e(string $value): string
             setTimeout(() => playTone(1040, 0.10, 'sine', 0.045), 120);
         }
 
+        function getViewButtonLabel(activeView) {
+            if (activeView === 'all') return 'Ansicht: Beide';
+            const child = children.find(item => item.id === activeView);
+            return child ? `Ansicht: ${child.name}` : 'Ansicht: Beide';
+        }
+
+        function applyView(activeView) {
+            const app = document.querySelector('.app');
+            const panels = document.querySelectorAll('.child-panel');
+            const isSingle = activeView !== 'all';
+
+            app.dataset.layout = isSingle ? 'single' : 'all';
+
+            panels.forEach(panel => {
+                const shouldShow = activeView === 'all' || panel.dataset.childId === activeView;
+                panel.classList.toggle('is-hidden', !shouldShow);
+            });
+
+            document.getElementById('viewToggleButton').textContent = getViewButtonLabel(activeView);
+        }
+
+        function cycleView() {
+            const views = ['all', ...children.map(child => child.id)];
+            const currentView = getSavedView();
+            const currentIndex = views.indexOf(currentView);
+            const nextView = views[(currentIndex + 1) % views.length];
+            saveView(nextView);
+            applyView(nextView);
+            playTone(520, 0.08, 'triangle', 0.04);
+        }
+
         document.querySelectorAll('.child-panel').forEach(panel => {
             const childId = panel.dataset.childId;
 
@@ -524,6 +598,7 @@ function e(string $value): string
         });
 
         document.getElementById('resetAllButton').addEventListener('click', resetAll);
+        document.getElementById('viewToggleButton').addEventListener('click', cycleView);
 
         document.getElementById('fullscreenButton').addEventListener('click', async () => {
             try {
@@ -538,6 +613,7 @@ function e(string $value): string
         });
 
         children.forEach(child => renderChild(child.id));
+        applyView(getSavedView());
     </script>
 </body>
 </html>
