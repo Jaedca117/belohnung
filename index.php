@@ -79,7 +79,6 @@ function e(string $value): string
             z-index: 10;
             display: flex;
             align-items: center;
-            justify-content: space-between;
             gap: 12px;
             padding: 12px 16px;
             background: linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0));
@@ -100,6 +99,7 @@ function e(string $value): string
             justify-content: flex-end;
             gap: 8px;
             pointer-events: auto;
+            margin-left: auto;
         }
 
         button {
@@ -302,6 +302,7 @@ function e(string $value): string
 
         .ui-toggle-button {
             width: 46px;
+            margin-left: 8px;
             height: 46px;
             border-radius: 50%;
             padding: 0;
@@ -455,11 +456,11 @@ function e(string $value): string
     <header class="topbar" id="topbar">
         <h1>Belohnungsbarometer</h1>
         <div class="topbar-actions">
-            <button type="button" id="uiToggleButton" class="ui-toggle-button" aria-pressed="false" aria-label="Bedienelemente ausblenden" title="Bedienelemente ausblenden">👁️</button>
             <button type="button" id="viewToggleButton">Ansicht: Beide</button>
             <button type="button" id="fullscreenButton">Vollbild</button>
             <button type="button" id="resetAllButton">Alle zurücksetzen</button>
         </div>
+        <button type="button" id="uiToggleButton" class="ui-toggle-button" aria-pressed="false" aria-label="Bedienelemente ausblenden" title="Bedienelemente ausblenden">👁️</button>
     </header>
 
     <main class="app" aria-label="Belohnungsbarometer für zwei Kinder">
