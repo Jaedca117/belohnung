@@ -237,6 +237,30 @@ function e(string $value): string
             padding: 9px 13px;
         }
 
+        .rotate-button {
+            position: absolute;
+            right: 14px;
+            bottom: 14px;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            padding: 0;
+            font-size: 1.35rem;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+        }
+
+        .child-panel.is-rotated {
+            transform: rotate(180deg);
+        }
+
+        .child-panel.is-rotated:active {
+            transform: rotate(180deg) scale(0.992);
+        }
+
         .danger-pulse {
             animation: dangerPulse 650ms ease-in-out 2;
         }
@@ -325,6 +349,8 @@ function e(string $value): string
                     <button type="button" data-action="undo">Zurück</button>
                     <button type="button" data-action="reset">Reset</button>
                 </div>
+
+                <button type="button" class="rotate-button" data-action="rotate" aria-label="Ausrichtung drehen">↻</button>
             </section>
         <?php endforeach; ?>
     </main>
@@ -391,6 +417,24 @@ function e(string $value): string
             return `reward-barometer-level-${childId}`;
         }
 
+        function rotateStorageKey(childId) {
+            return `reward-barometer-rotated-${childId}`;
+        }
+
+        function isRotated(childId) {
+            return localStorage.getItem(rotateStorageKey(childId)) === "1";
+        }
+
+        function setRotated(childId, rotated) {
+            localStorage.setItem(rotateStorageKey(childId), rotated ? "1" : "0");
+            renderChild(childId);
+        }
+
+        function toggleRotated(childId) {
+            setRotated(childId, !isRotated(childId));
+            playTone(600, 0.08, "triangle", 0.045);
+        }
+
         function getLevel(childId) {
             const saved = Number(localStorage.getItem(storageKey(childId)));
             if (Number.isInteger(saved) && saved >= minLevel && saved <= maxLevel) {
@@ -417,6 +461,7 @@ function e(string $value): string
             panel.querySelector('.level-text').textContent = `${config.text} · ${level}/${maxLevel}`;
             panel.querySelector('.progress-fill').style.width = `${(level / maxLevel) * 100}%`;
             panel.setAttribute('aria-label', `${panel.querySelector('.name').textContent}: Stufe ${level} von ${maxLevel}`);
+            panel.classList.toggle('is-rotated', isRotated(childId));
         }
 
         function increase(childId) {
@@ -463,6 +508,7 @@ function e(string $value): string
                     const action = actionButton.dataset.action;
                     if (action === 'undo') decrease(childId);
                     if (action === 'reset') reset(childId);
+                    if (action === 'rotate') toggleRotated(childId);
                     return;
                 }
 
