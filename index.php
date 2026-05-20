@@ -301,6 +301,7 @@ function e(string $value): string
         }
 
         .ui-toggle-button {
+            pointer-events: auto;
             width: 46px;
             margin-left: 8px;
             height: 46px;
