@@ -295,47 +295,52 @@ function e(string $value): string
         @media (max-width: 760px) {
             .topbar {
                 align-items: flex-start;
-                gap: 10px;
+                gap: 8px;
+                padding: 8px 10px;
             }
 
             .topbar h1 {
-                font-size: 1rem;
+                font-size: 0.95rem;
+            }
+
+            .topbar-actions {
+                gap: 6px;
             }
 
             button {
-                padding: 10px 12px;
-                font-size: 0.88rem;
+                padding: 8px 10px;
+                font-size: 0.82rem;
             }
 
             .app {
-                grid-template-columns: 1fr;
-                grid-template-rows: 1fr 1fr;
+                width: 100%;
+                height: 100dvh;
             }
 
             .child-panel {
-                padding: 62px 16px 16px;
+                padding: 52px 12px 12px;
             }
 
             .child-panel + .child-panel {
                 border-left: 0;
-                border-top: 4px solid rgba(255, 255, 255, 0.25);
+                border-top: 3px solid rgba(255, 255, 255, 0.25);
             }
 
             .photo-wrap {
-                width: clamp(82px, 19vh, 150px);
-                margin-bottom: 10px;
+                margin-bottom: 8px;
             }
 
-            .emoji {
-                font-size: clamp(3.8rem, 14vh, 7rem);
-            }
-
-            .name {
-                font-size: clamp(1.7rem, 6vh, 3.2rem);
+            .level-text {
+                margin-top: 6px;
             }
 
             .panel-actions {
-                margin-top: 10px;
+                margin-top: 8px;
+                gap: 8px;
+            }
+
+            .panel-actions button {
+                padding: 7px 10px;
             }
 
             .hint {
@@ -343,7 +348,83 @@ function e(string $value): string
             }
 
             .progress {
-                width: 86%;
+                width: 88%;
+                margin-top: 10px;
+            }
+
+            .rotate-button {
+                right: 8px;
+                bottom: 8px;
+                width: 38px;
+                height: 38px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 760px) and (orientation: portrait) {
+            .app {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+
+            .photo-wrap {
+                width: clamp(66px, 12vh, 100px);
+            }
+
+            .name {
+                margin-bottom: 6px;
+                font-size: clamp(1.2rem, 3.5vh, 1.8rem);
+            }
+
+            .emoji {
+                font-size: clamp(2.2rem, 5.6vh, 3.8rem);
+            }
+
+            .level-text {
+                font-size: clamp(0.88rem, 2.3vh, 1.2rem);
+            }
+
+            .progress {
+                height: 14px;
+            }
+        }
+
+        @media (max-width: 760px) and (orientation: landscape) {
+            .app {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr;
+            }
+
+            .child-panel {
+                padding: 48px 10px 8px;
+            }
+
+            .child-panel + .child-panel {
+                border-top: 0;
+                border-left: 3px solid rgba(255, 255, 255, 0.25);
+            }
+
+            .photo-wrap {
+                width: clamp(58px, 17vh, 90px);
+            }
+
+            .name {
+                margin-bottom: 5px;
+                font-size: clamp(1rem, 4.2vh, 1.5rem);
+            }
+
+            .emoji {
+                font-size: clamp(2rem, 6vh, 3.2rem);
+                margin: 2px 0;
+            }
+
+            .level-text {
+                font-size: clamp(0.8rem, 2.4vh, 1.1rem);
+            }
+
+            .progress {
+                height: 12px;
+                margin-top: 8px;
             }
         }
     </style>
